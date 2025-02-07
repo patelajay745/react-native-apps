@@ -5,10 +5,10 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  Touchable,
-  TouchableOpacity,
   View,
+  Vibration,
 } from 'react-native';
+
 import React, {PropsWithChildren, useState} from 'react';
 import DiceOne from '../assets/One.png';
 import DiceTwo from '../assets/Two.png';
@@ -50,7 +50,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textTransform: 'uppercase',
   },
+  btn: {
+    flex: 0.1,
+  },
+  imageContainer: {
+    justifyContent: 'center',
+    flex: 0.9,
+  },
 });
+
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
 
 export default function App() {
   const [diceImage, setDiceImage] = useState<ImageSourcePropType>(DiceOne);
@@ -80,12 +92,16 @@ export default function App() {
       default:
         break;
     }
+
+    Vibration.vibrate(100);
   };
 
   return (
     <View style={styles.container}>
-      <Dice imageurl={diceImage} />
-      <Pressable onPress={rollDiceOnTap}>
+      <View style={styles.imageContainer}>
+        <Dice imageurl={diceImage} />
+      </View>
+      <Pressable style={styles.btn} onPress={rollDiceOnTap}>
         <Text style={styles.rollDiceBtnText}>Roll the dice</Text>
       </Pressable>
     </View>
