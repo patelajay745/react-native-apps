@@ -65,41 +65,42 @@ const options = {
 };
 
 export default function App() {
-  const [diceImage, setDiceImage] = useState<ImageSourcePropType>(DiceOne);
+  const [diceImage, setDiceImage] = useState<
+    [ImageSourcePropType, ImageSourcePropType]
+  >([DiceOne, DiceOne]);
 
   const rollDiceOnTap = () => {
-    let randomNumber = Math.floor(Math.random() * 6) + 1;
+    let [imageOne, imageTwo] = [
+      Math.floor(Math.random() * 6) + 1,
+      Math.floor(Math.random() * 6) + 1,
+    ];
 
-    switch (randomNumber) {
-      case 1:
-        setDiceImage(DiceOne);
-        break;
-      case 2:
-        setDiceImage(DiceTwo);
-        break;
-      case 3:
-        setDiceImage(DiceThree);
-        break;
-      case 4:
-        setDiceImage(DiceFour);
-        break;
-      case 5:
-        setDiceImage(DiceFive);
-        break;
-      case 6:
-        setDiceImage(DiceSix);
-        break;
-      default:
-        break;
-    }
+    const getDiceImage = (num: number) => {
+      switch (num) {
+        case 1:
+          return DiceOne;
+        case 2:
+          return DiceTwo;
+        case 3:
+          return DiceThree;
+        case 4:
+          return DiceFour;
+        case 5:
+          return DiceFive;
+        case 6:
+          return DiceSix;
+      }
+    };
 
+    setDiceImage([getDiceImage(imageOne), getDiceImage(imageTwo)]);
     Vibration.vibrate(100);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <Dice imageurl={diceImage} />
+        <Dice imageurl={diceImage[0]} />
+        <Dice imageurl={diceImage[1]} />
       </View>
       <Pressable style={styles.btn} onPress={rollDiceOnTap}>
         <Text style={styles.rollDiceBtnText}>Roll the dice</Text>
