@@ -1,0 +1,2 @@
+/Volumes/Ajay/Development/React-native/rollDice/node_modules/react-native-haptic-feedback/android/build/generated/source/codegen/jni/CMakeLists.txt
+/Volumes/Ajay/Development/React-native/rollDice/node_modules/react-native/ReactAndroid/cmake-utils/default-app-setup/CMakeLists.txt

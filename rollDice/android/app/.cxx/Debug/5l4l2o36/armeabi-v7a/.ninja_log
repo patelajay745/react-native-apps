@@ -1,0 +1,12 @@
+# ninja log v5
+0	7	0	/Volumes/Ajay/Development/React-native/rollDice/android/app/.cxx/Debug/5l4l2o36/armeabi-v7a/CMakeFiles/cmake.verify_globs	23e777388554db6b
+1	1178	1739255201000000000	RNHapticFeedbackSpec_autolinked_build/CMakeFiles/react_codegen_RNHapticFeedbackSpec.dir/react/renderer/components/RNHapticFeedbackSpec/States.cpp.o	ddcc7a0d2bf4cc41
+0	1344	1739255201000000000	RNHapticFeedbackSpec_autolinked_build/CMakeFiles/react_codegen_RNHapticFeedbackSpec.dir/react/renderer/components/RNHapticFeedbackSpec/EventEmitters.cpp.o	f96a66d4c0f2b1c
+0	1518	1739255201000000000	RNHapticFeedbackSpec_autolinked_build/CMakeFiles/react_codegen_RNHapticFeedbackSpec.dir/react/renderer/components/RNHapticFeedbackSpec/Props.cpp.o	9ef96b84a9124f67
+1	1539	1739255201000000000	RNHapticFeedbackSpec_autolinked_build/CMakeFiles/react_codegen_RNHapticFeedbackSpec.dir/react/renderer/components/RNHapticFeedbackSpec/ShadowNodes.cpp.o	d41b2c0c38757199
+0	1583	1739255201000000000	CMakeFiles/appmodules.dir/Volumes/Ajay/Development/React-native/rollDice/android/app/build/generated/autolinking/src/main/jni/autolinking.cpp.o	af2a0709c7bfb3ad
+0	1593	1739255201000000000	RNHapticFeedbackSpec_autolinked_build/CMakeFiles/react_codegen_RNHapticFeedbackSpec.dir/react/renderer/components/RNHapticFeedbackSpec/RNHapticFeedbackSpecJSI-generated.cpp.o	e5d83ebc58833e08
+0	1654	1739255201000000000	RNHapticFeedbackSpec_autolinked_build/CMakeFiles/react_codegen_RNHapticFeedbackSpec.dir/RNHapticFeedbackSpec-generated.cpp.o	e713fe45f69579c6
+0	1666	1739255201000000000	RNHapticFeedbackSpec_autolinked_build/CMakeFiles/react_codegen_RNHapticFeedbackSpec.dir/react/renderer/components/RNHapticFeedbackSpec/ComponentDescriptors.cpp.o	5a8c56eaa343e06a
+0	1739	1739255201000000000	CMakeFiles/appmodules.dir/OnLoad.cpp.o	1ee260fff6d3bfd4
+1739	1791	1739255201000000000	/Volumes/Ajay/Development/React-native/rollDice/android/app/build/intermediates/cxx/Debug/5l4l2o36/obj/armeabi-v7a/libappmodules.so	726b2a7faa990a59

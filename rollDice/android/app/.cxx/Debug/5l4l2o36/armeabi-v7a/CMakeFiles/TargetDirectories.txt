@@ -1,0 +1,6 @@
+/Volumes/Ajay/Development/React-native/rollDice/android/app/.cxx/Debug/5l4l2o36/armeabi-v7a/CMakeFiles/appmodules.dir
+/Volumes/Ajay/Development/React-native/rollDice/android/app/.cxx/Debug/5l4l2o36/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Volumes/Ajay/Development/React-native/rollDice/android/app/.cxx/Debug/5l4l2o36/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+/Volumes/Ajay/Development/React-native/rollDice/android/app/.cxx/Debug/5l4l2o36/armeabi-v7a/RNHapticFeedbackSpec_autolinked_build/CMakeFiles/react_codegen_RNHapticFeedbackSpec.dir
+/Volumes/Ajay/Development/React-native/rollDice/android/app/.cxx/Debug/5l4l2o36/armeabi-v7a/RNHapticFeedbackSpec_autolinked_build/CMakeFiles/edit_cache.dir
+/Volumes/Ajay/Development/React-native/rollDice/android/app/.cxx/Debug/5l4l2o36/armeabi-v7a/RNHapticFeedbackSpec_autolinked_build/CMakeFiles/rebuild_cache.dir
