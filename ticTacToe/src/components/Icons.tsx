@@ -1,8 +1,6 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {PropsWithChildren} from 'react';
 
-import {Icon} from '@rneui/themed';
-
 type IconsProps = PropsWithChildren<{
   name: string;
 }>;
@@ -10,12 +8,22 @@ type IconsProps = PropsWithChildren<{
 export default function Icons({name}: IconsProps) {
   switch (name) {
     case 'circle':
-      return <Icon name="circle" />;
+      return <Text style={[styles.fontTxt, styles.fontCircle]}>O</Text>;
     case 'cross':
-      return <Icon name="cross" size={38} color={'#38CC77'} />;
+      return <Text style={[styles.fontTxt, styles.fontCross]}>X</Text>;
     default:
-      return <Icon name="pencil" size={38} color={'#0D0D0D'} />;
+      return <Text style={styles.fontTxt}>...</Text>;
   }
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  fontTxt: {
+    fontSize: 48,
+  },
+  fontCircle: {
+    color: '#0abf81',
+  },
+  fontCross: {
+    color: '#F4C724',
+  },
+});
