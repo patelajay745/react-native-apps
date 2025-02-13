@@ -103,12 +103,12 @@ export default function App() {
     <>
       <SafeAreaView></SafeAreaView>
       <View style={styles.container}>
-        <Pressable
-          style={[
-            styles.btnTurn,
-            isCross ? styles.btnOneTurn : styles.btnTwoTurn,
-          ]}>
-          <Text style={styles.btnTxt}>
+        <Pressable style={[styles.btnTurn]}>
+          <Text
+            style={[
+              styles.btnTxt,
+              isCross ? styles.btnOneTurn : styles.btnTwoTurn,
+            ]}>
             {gameWinner
               ? `${gameWinner}  `
               : `Player ${isCross ? 'X' : 'O'} 's Turn`}
@@ -161,13 +161,15 @@ const styles = StyleSheet.create({
   btnTurn: {
     marginVertical: 10,
     borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#333',
     paddingVertical: 20,
   },
   btnOneTurn: {
-    backgroundColor: '#F4C724',
+    color: '#F4C724',
   },
   btnTwoTurn: {
-    backgroundColor: '#0abf81',
+    color: '#0abf81',
   },
   btnTxt: {
     textAlign: 'center',
