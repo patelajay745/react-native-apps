@@ -1,5 +1,6 @@
 # Ignore node_modules in any subfolder
 */node_modules/
+*/*/node_modules/
 
 # Ignore build and cache files in any subfolder
 */ios/build/
@@ -36,7 +37,6 @@ Thumbs.db
 
 # Optional: if using TypeScript
 # *.tsbuildinfo
-
 
 */build/
 */*.pbxuser
