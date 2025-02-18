@@ -1,6 +1,8 @@
 import "src/db";
+import "dotenv/config";
 import express from "express";
-import authRouter from "./routes/auth";
+import authRouter from "./routes/auth.route";
+import { errorHandler } from "./middleware/ErrorHandler";
 
 const app = express();
 const port = 8000;
@@ -14,6 +16,8 @@ app.get("/", (req, res) => {
 
 //Api Routes
 app.use("/auth", authRouter);
+
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`The App is running on port ${port}`);

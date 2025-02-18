@@ -1,6 +1,7 @@
 # Ignore node_modules in any subfolder
 */node_modules/
 */*/node_modules/
+*/*/.env
 
 # Ignore build and cache files in any subfolder
 */ios/build/
