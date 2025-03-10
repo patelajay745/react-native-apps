@@ -7,6 +7,7 @@ import { errorHandler } from "./middleware/ErrorHandler";
 const app = express();
 const port = 8000;
 
+app.use(express.static("src/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
