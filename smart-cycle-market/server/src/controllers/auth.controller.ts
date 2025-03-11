@@ -1,4 +1,4 @@
-import { Request, Response, RequestHandler } from "express";
+import { Request, Response } from "express";
 import { User } from "src/models/users.model";
 import crypto from "crypto";
 import { AuthVerifcationToken } from "src/models/authVerificationToken.model";
@@ -6,6 +6,8 @@ import nodemailer from "nodemailer";
 import { ApiError, ApiResponse, asyncHandler } from "src/utils/helper";
 import jwt from "jsonwebtoken";
 import MyMail from "src/utils/mail";
+import { PasswordResetToken } from "src/models/passwordResetToken.model";
+import { validate } from "src/middleware/validator";
 
 //register new user
 export const createNewUser = asyncHandler(
@@ -74,7 +76,11 @@ export const getLogin = asyncHandler(async (req, res) => {
     throw new ApiError("User not found", 403);
   }
 
-  const validPassword = user.comparePassword(password);
+  console.log(user);
+
+  const validPassword = await user.comparePassword(password);
+
+  console.log(validPassword);
 
   if (!validPassword) {
     throw new ApiError("Please provide correct Password", 403);
@@ -101,7 +107,7 @@ export const getLogin = asyncHandler(async (req, res) => {
 
   return res.status(200).json(
     new ApiResponse(
-      "You got it",
+      "user logged in successfully",
       {
         profile: {
           id: user._id,
@@ -147,15 +153,9 @@ export const getAccessToken = asyncHandler(async (req, res) => {
   const { refreshToken } = req.body;
   if (!refreshToken) throw new ApiError("UnAuthorized access", 403);
 
-  if (!process.env.REFRESH_TOKEN_SECRET) {
-    throw new Error(
-      "REFRESH_TOKEN_SECRET is not defined in environment variables"
-    );
-  }
-
   const payload = jwt.verify(
     refreshToken,
-    process.env.REFRESH_TOKEN_SECRET
+    process.env.REFRESH_TOKEN_SECRET!
   ) as { _id: string };
 
   console.log(payload);
@@ -213,4 +213,59 @@ export const getSignOut = asyncHandler(async (req, res) => {
   await user.save();
 
   return res.json(new ApiResponse("Logout sucessfully", {}, 200));
+});
+
+//get link to reset password
+export const getForgetPasswordLink = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) throw new ApiError("Please provide email", 401);
+
+  const user = await User.findOne({ email });
+
+  if (!user) throw new ApiError("user not found", 404);
+
+  await PasswordResetToken.findOneAndDelete({ owner: user._id });
+
+  const token = crypto.randomBytes(36).toString("hex");
+
+  await PasswordResetToken.create({ owner: user._id, token: token });
+
+  const link = `${process.env.BASE_URL!}/reset-password.html?id=${
+    user._id
+  }&token=${token}`;
+
+  const mail = new MyMail(email, link);
+  mail.sendPasswordResetLink();
+
+  return res.json(new ApiResponse("Please check your inbox", {}, 200));
+});
+
+// send response to verify-password-reset-token
+export const getIsValid = asyncHandler(async (req, res) => {
+  return res.json({ valid: true });
+});
+
+export const PasswordReset = asyncHandler(async (req, res) => {
+  const { id, password } = req.body;
+
+  const user = await User.findById({ _id: id });
+  if (!user) {
+    throw new ApiError("No user found", 403);
+  }
+
+  const matched = await user.comparePassword(password);
+  if (matched) {
+    throw new ApiError("The new password must be different", 422);
+  }
+
+  user.password = password;
+  await user.save();
+
+  await PasswordResetToken.findOneAndDelete({ owner: id });
+
+  const mail = new MyMail(user.email);
+  mail.sendPasswordUpdateMessage();
+
+  return res.json(new ApiResponse("password is reset successfully", {}, 201));
 });

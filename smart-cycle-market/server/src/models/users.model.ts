@@ -53,15 +53,9 @@ userSchema.methods.comparePassword = async function (password) {
 };
 
 userSchema.methods.generateAccessToken = function () {
-  if (!process.env.ACCESS_TOKEN_SECRET) {
-    throw new Error(
-      "ACCESS_TOKEN_SECRET is not defined in environment variables"
-    );
-  }
-
   const accessToken = jwt.sign(
     { _id: this._id },
-    process.env.ACCESS_TOKEN_SECRET,
+    process.env.ACCESS_TOKEN_SECRET!,
     {
       expiresIn: "15m",
     }
@@ -71,18 +65,10 @@ userSchema.methods.generateAccessToken = function () {
 };
 
 userSchema.methods.generateRefreshToken = function () {
-  if (!process.env.REFRESH_TOKEN_SECRET) {
-    throw new Error(
-      "REFRESH_TOKEN_SECRET is not defined in environment variables"
-    );
-  }
-
   const refreshToken = jwt.sign(
     { _id: this._id },
-    process.env.REFRESH_TOKEN_SECRET
+    process.env.REFRESH_TOKEN_SECRET!
   );
-
-  
 
   return refreshToken;
 };

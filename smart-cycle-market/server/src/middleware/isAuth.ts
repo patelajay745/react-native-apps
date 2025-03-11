@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
+import { PasswordResetToken } from "src/models/passwordResetToken.model";
 import { User } from "src/models/users.model";
 import { ApiError, asyncHandler } from "src/utils/helper";
 
@@ -17,7 +18,7 @@ declare global {
   }
 }
 
-export const isAuth: RequestHandler = asyncHandler(async (req, res, next) => {
+export const isAuth = asyncHandler(async (req, res, next) => {
   try {
     const authToken = req.headers.authorization;
 
@@ -27,13 +28,7 @@ export const isAuth: RequestHandler = asyncHandler(async (req, res, next) => {
 
     const token = authToken.split(" ")[1];
 
-    if (!process.env.ACCESS_TOKEN_SECRET) {
-      throw new Error(
-        "ACCESS_TOKEN_SECRET is not defined in environment variables"
-      );
-    }
-
-    const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET) as {
+    const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as {
       _id: string;
     };
 
@@ -59,3 +54,29 @@ export const isAuth: RequestHandler = asyncHandler(async (req, res, next) => {
 
   next();
 });
+export const isValidPasswordResetToken = asyncHandler(
+  async (req, res, next) => {
+    try {
+      const { token, id } = req.body;
+      const foundToken = await PasswordResetToken.findOne({ owner: id });
+
+      if (!foundToken) {
+        throw new ApiError("No token found", 404);
+      }
+
+      const isValid = await foundToken.compareToken(token);
+      if (!isValid) {
+        throw new ApiError("Invalid token", 400);
+      }
+      
+    } catch (error) {
+      console.log(error);
+
+      if (error instanceof Error) {
+        throw new ApiError(error.message, 500);
+      }
+    }
+
+    next();
+  }
+);
