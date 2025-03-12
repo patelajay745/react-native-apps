@@ -64,3 +64,7 @@ export const resetPasswordSchema = yup.object({
       "Password must include uppercase, lowercase, number and no spaces"
     ),
 });
+
+export const updateProfileSchema = yup.object({
+  name: yup.string().required("Name is required"),
+});

@@ -42,12 +42,12 @@ export default class MyMail {
     }
   }
 
-  async sendPasswordUpdateMessage() {
+  async sendUpdateMessage(message: string) {
     try {
       await this.transport.sendMail({
         to: this.email,
         from: "info@ajaypatel.live",
-        html: `<h1> Your password is updated, you can now use your new Password. <h1>`,
+        html: `<h1> ${message} <h1>`,
       });
     } catch (error) {
       if (error instanceof Error) throw new ApiError(error.message, 500);

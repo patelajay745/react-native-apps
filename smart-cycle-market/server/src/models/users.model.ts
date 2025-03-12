@@ -1,6 +1,7 @@
 import { compare, genSalt, hash } from "bcrypt";
 import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken";
+import { object, string } from "yup";
 
 interface UserDocument extends Document {
   name: string;
@@ -8,6 +9,7 @@ interface UserDocument extends Document {
   password: string;
   verified: boolean;
   tokens: string[];
+  avatar?: { url: string; id: string };
 }
 
 interface Methods {
@@ -36,6 +38,11 @@ const userSchema = new Schema<UserDocument, {}, Methods>(
       default: false,
     },
     tokens: [String],
+    avatar: {
+      type: Object,
+      url: String,
+      id: String,
+    },
   },
   { timestamps: true }
 );
@@ -57,7 +64,7 @@ userSchema.methods.generateAccessToken = function () {
     { _id: this._id },
     process.env.ACCESS_TOKEN_SECRET!,
     {
-      expiresIn: "15m",
+      expiresIn: "24h",
     }
   );
 

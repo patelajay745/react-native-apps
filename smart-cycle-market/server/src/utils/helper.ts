@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 
 export class ApiError extends Error {
   message: string;
@@ -42,8 +42,14 @@ type AsyncRequestHandler = (
   next: NextFunction
 ) => Promise<any>;
 
-export const asyncHandler = (requestHandler: AsyncRequestHandler) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err));
+// export const asyncHandler = (requestHandler: AsyncRequestHandler) => {
+//   return (req: Request, res: Response, next: NextFunction) => {
+//     Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err));
+//   };
+// };
+
+export function asyncHandler(asyncFn: RequestHandler): RequestHandler {
+  return function (req: Request, res: Response, next: NextFunction) {
+    Promise.resolve(asyncFn(req, res, next)).catch(next);
   };
-};
+}

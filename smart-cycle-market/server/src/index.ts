@@ -4,8 +4,14 @@ import express from "express";
 import authRouter from "./routes/auth.route";
 import { errorHandler } from "./middleware/ErrorHandler";
 
+// swagger
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./swagger-output.json";
+
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 4000;
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.static("src/public"));
 app.use(express.json());

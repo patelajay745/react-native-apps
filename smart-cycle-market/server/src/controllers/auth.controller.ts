@@ -2,12 +2,22 @@ import { Request, Response } from "express";
 import { User } from "src/models/users.model";
 import crypto from "crypto";
 import { AuthVerifcationToken } from "src/models/authVerificationToken.model";
-import nodemailer from "nodemailer";
 import { ApiError, ApiResponse, asyncHandler } from "src/utils/helper";
 import jwt from "jsonwebtoken";
 import MyMail from "src/utils/mail";
 import { PasswordResetToken } from "src/models/passwordResetToken.model";
-import { validate } from "src/middleware/validator";
+import { v2 as cloudinary } from "cloudinary";
+
+const cloud_name = process.env.CLOUDINARY_PROJECT_NAME!;
+const api_key = process.env.CLOUDINARY_API_KEY!;
+const api_secret = process.env.CLOUDINARY_API_SECRET!;
+
+cloudinary.config({
+  cloud_name: cloud_name,
+  api_key: api_key,
+  api_secret: api_secret,
+  secure: true,
+});
 
 //register new user
 export const createNewUser = asyncHandler(
@@ -76,11 +86,7 @@ export const getLogin = asyncHandler(async (req, res) => {
     throw new ApiError("User not found", 403);
   }
 
-  console.log(user);
-
   const validPassword = await user.comparePassword(password);
-
-  console.log(validPassword);
 
   if (!validPassword) {
     throw new ApiError("Please provide correct Password", 403);
@@ -157,8 +163,6 @@ export const getAccessToken = asyncHandler(async (req, res) => {
     refreshToken,
     process.env.REFRESH_TOKEN_SECRET!
   ) as { _id: string };
-
-  console.log(payload);
 
   if (!payload._id) {
     throw new ApiError("UnAuthorized request", 401);
@@ -265,7 +269,103 @@ export const PasswordReset = asyncHandler(async (req, res) => {
   await PasswordResetToken.findOneAndDelete({ owner: id });
 
   const mail = new MyMail(user.email);
-  mail.sendPasswordUpdateMessage();
+  mail.sendUpdateMessage(
+    "Your Password has been updated,You can use new password to login."
+  );
 
   return res.json(new ApiResponse("password is reset successfully", {}, 201));
+});
+
+export const updateProfile = asyncHandler(async (req, res) => {
+  const { name } = req.body;
+
+  const user = await User.findById({ _id: req.user.id });
+  if (!user) {
+    throw new ApiError("No user found", 403);
+  }
+
+  user.name = name;
+  await user.save();
+
+  const mail = new MyMail(user.email);
+  mail.sendUpdateMessage("Your name has been updated");
+
+  return res.json(
+    new ApiResponse(
+      "Name is updated successfully",
+      {
+        profile: {
+          ...req.user,
+          name,
+        },
+      },
+      200
+    )
+  );
+});
+
+export const updateAvatar = asyncHandler(async (req, res) => {
+  const { avatar } = req.files;
+
+  if (Array.isArray(avatar))
+    throw new ApiError("Multiple files are not allowed", 422);
+
+  if (!avatar.mimetype?.startsWith("image"))
+    throw new ApiError("Only Image is allowed", 422);
+
+  const user = await User.findById(req.user.id);
+
+  if (!user) throw new ApiError("User not found", 422);
+
+  if (user.avatar?.id) {
+    await cloudinary.uploader.destroy(user.avatar.id);
+  }
+
+  // upload file to cloudinary
+  const { secure_url: url, public_id: id } = await cloudinary.uploader.upload(
+    avatar.filepath,
+    {
+      width: 300,
+      height: 300,
+      crop: "thumb",
+      gravity: "face",
+    }
+  );
+
+  user.avatar = { url, id };
+  await user.save();
+
+  return res.json(
+    new ApiResponse(
+      "Avatar has been uploaded",
+      { ...req.user, avatar: user.avatar.url },
+      201
+    )
+  );
+});
+
+export const getPublicProfile = asyncHandler(async (req, res) => {
+  const id = req.params["id"];
+
+  if (!id) throw new ApiError("User not found", 422);
+
+  const user = await User.findById(id);
+
+  if (!user) throw new ApiError("User not found", 404);
+
+  return res.json(
+    new ApiResponse(
+      "User has been fetched",
+      {
+        profile: {
+          id,
+          email: user.email,
+          name: user.name,
+          verified: user.verified,
+          avatar: user.avatar?.url,
+        },
+      },
+      200
+    )
+  );
 });

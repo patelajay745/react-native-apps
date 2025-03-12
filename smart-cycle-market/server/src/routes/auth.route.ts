@@ -7,17 +7,22 @@ import {
   getLogin,
   getNewToken,
   getProfile,
+  getPublicProfile,
   getSignOut,
   PasswordReset,
+  updateAvatar,
+  updateProfile,
   verifyEmail,
 } from "src/controllers/auth.controller";
 import { isAuth, isValidPasswordResetToken } from "src/middleware/isAuth";
+import { fileParser } from "src/middleware/middleware";
 import { validate } from "src/middleware/validator";
 import {
   forgetPasswordSchema,
   loginSchema,
   newUserSchema,
   resetPasswordSchema,
+  updateProfileSchema,
   verifyTokenSchema,
 } from "src/utils/validationSchema";
 
@@ -47,5 +52,13 @@ authRouter.post(
   isValidPasswordResetToken,
   PasswordReset
 );
+authRouter.patch(
+  "/update-profile",
+  isAuth,
+  validate(updateProfileSchema),
+  updateProfile
+);
+authRouter.patch("/update-avatar", isAuth, fileParser, updateAvatar);
+authRouter.get("/profile/:id", isAuth, getPublicProfile);
 
 export default authRouter;

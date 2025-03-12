@@ -43,7 +43,6 @@ export const isAuth = asyncHandler(async (req, res, next) => {
       verified: user.verified,
     };
   } catch (error) {
-    console.log(error);
     if (error instanceof TokenExpiredError) {
       throw new ApiError("session Expired", 401);
     }
@@ -68,10 +67,7 @@ export const isValidPasswordResetToken = asyncHandler(
       if (!isValid) {
         throw new ApiError("Invalid token", 400);
       }
-      
     } catch (error) {
-      console.log(error);
-
       if (error instanceof Error) {
         throw new ApiError(error.message, 500);
       }
