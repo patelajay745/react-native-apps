@@ -1,7 +1,6 @@
 import "src/db";
 import "dotenv/config";
 import express from "express";
-import authRouter from "./routes/auth.route";
 import { errorHandler } from "./middleware/ErrorHandler";
 
 // swagger
@@ -22,7 +21,11 @@ app.get("/", (req, res) => {
 });
 
 //Api Routes
+import { authRouter } from "./routes/auth.route";
+import { productRouter } from "./routes/product.route";
+
 app.use("/auth", authRouter);
+app.use("/product", productRouter);
 
 app.use(errorHandler);
 

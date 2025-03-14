@@ -26,7 +26,7 @@ import {
   verifyTokenSchema,
 } from "src/utils/validationSchema";
 
-const authRouter = Router();
+export const authRouter = Router();
 
 authRouter.post("/user", validate(newUserSchema), createNewUser);
 authRouter.post("/verify", validate(verifyTokenSchema), verifyEmail);
@@ -60,5 +60,3 @@ authRouter.patch(
 );
 authRouter.patch("/update-avatar", isAuth, fileParser, updateAvatar);
 authRouter.get("/profile/:id", isAuth, getPublicProfile);
-
-export default authRouter;

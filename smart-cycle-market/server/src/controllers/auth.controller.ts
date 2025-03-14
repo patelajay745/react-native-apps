@@ -6,18 +6,7 @@ import { ApiError, ApiResponse, asyncHandler } from "src/utils/helper";
 import jwt from "jsonwebtoken";
 import MyMail from "src/utils/mail";
 import { PasswordResetToken } from "src/models/passwordResetToken.model";
-import { v2 as cloudinary } from "cloudinary";
-
-const cloud_name = process.env.CLOUDINARY_PROJECT_NAME!;
-const api_key = process.env.CLOUDINARY_API_KEY!;
-const api_secret = process.env.CLOUDINARY_API_SECRET!;
-
-cloudinary.config({
-  cloud_name: cloud_name,
-  api_key: api_key,
-  api_secret: api_secret,
-  secure: true,
-});
+import cloudUploader from "src/cloud";
 
 //register new user
 export const createNewUser = asyncHandler(
@@ -318,11 +307,11 @@ export const updateAvatar = asyncHandler(async (req, res) => {
   if (!user) throw new ApiError("User not found", 422);
 
   if (user.avatar?.id) {
-    await cloudinary.uploader.destroy(user.avatar.id);
+    await cloudUploader.destroy(user.avatar.id);
   }
 
   // upload file to cloudinary
-  const { secure_url: url, public_id: id } = await cloudinary.uploader.upload(
+  const { secure_url: url, public_id: id } = await cloudUploader.upload(
     avatar.filepath,
     {
       width: 300,
